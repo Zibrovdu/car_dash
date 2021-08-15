@@ -1,3 +1,13 @@
+html {
+  font-size: 62.5%; }
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "Open Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: rgb(50, 50, 50); }
+
+
 .banner {
     height: 75px;
     width/max-width: 1800px;
@@ -17,4 +27,42 @@
     float: right;
     right: 10px;
     height: 75px;
+}
+
+fuel_statistic_table {
+    padding: 0 20px;
+    border: 1px solid black;
+    margin: 20px 25px;
+}
+
+.bblock {
+     display: inline-block; /*Задаем обтекание*/
+     margin-top: 40px;
+     /*line-height: 40px;/*Высота строки +  верт. центрирования текста*/
+     font-size: 20px;
+     margin: 0;
+     vertical-align: top;
+     height: 50px;
+     padding: 10px;
+    }
+
+.wrapper-dropdown-3 {
+/* Размер и позиционирование */
+    position: relative;
+    width: 290px;
+    margin: 0;
+    padding: 0px;
+    font-weight: bold;
+    color: #012e67;
+}
+.wrapper-dropdown-4 {
+/* Размер и позиционирование */
+    position: relative;
+    width: 200px;
+    margin: 0;
+    padding: 0px;
+    background: #b1d5fa;
+    border-radius: 1px;
+    font-weight: bold;
+    color: #012e67;
 }

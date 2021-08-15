@@ -2,8 +2,9 @@ import dash
 
 from car_dash.layouts import serve_layout
 from car_dash.callbacks import register_callbacks
+
+
 app = dash.Dash(__name__,
-                suppress_callback_exceptions=True,
                 title='Honda The power of dream')
 server = app.server
 
