@@ -30,6 +30,7 @@ def serve_layout():
                           start_year=start_year,
                           finish_week=finish_week,
                           finish_year=finish_year)
+    print(d_week)
 
     layout = html.Div([
         html.Div([
@@ -69,7 +70,7 @@ def serve_layout():
                                              options=d_week,
                                              searchable=False,
                                              clearable=False,
-                                             value=finish_week,
+                                             value='_'.join([str(finish_week), str(finish_year)]),
                                              style=dict(width='100%',
                                                         heigth='60px'),
                                              disabled=False
@@ -105,16 +106,29 @@ def serve_layout():
                             label='Топливо',
                             value='fuel',
                             children=[
-                                html.Table([
-                                    html.Tr([
-                                        html.Td('Average liters'),
-                                        html.Td('Average price')
-                                    ]),
-                                    html.Tr([
-                                        html.Td(id='avg_liters'),
-                                        html.Td(id='avg_price')
-                                    ])
-                                ], className='fuel_statistic_table'),
+                                html.Div([
+                                    html.Label('Количество литров:', className='label_liters'),
+                                    html.Label(id='avg_liters', className='label_value_liters')
+                                    # html.Table([
+                                    #     html.Tr([
+                                    #         html.Td('Average liters'),
+                                    #         html.Td('Average price')
+                                    #     ]),
+                                    #     html.Tr([
+                                    #         html.Td(id='avg_liters'),
+                                    #         html.Td(id='avg_price')
+                                    #     ])
+                                    # ], className='fuel_statistic_table'),
+                                ], className='div_fuel_table'),
+                                html.Div([
+                                    html.Label('Средняя стоимость литра, руб:', className='label_price'),
+                                    html.Label(id='avg_price', className='label_value_price')
+                                ], className='div_price'),
+                                html.Div([
+                                    html.Label('Пробег:', className='label_mileage'),
+                                    html.Label(id='mileage', className='label_value_mileage')
+                                ], className='div_mileage'),
+
 
                                 dt.DataTable(id='main_fuel_table',
                                              data=fuel_data_df.to_dict('records'),

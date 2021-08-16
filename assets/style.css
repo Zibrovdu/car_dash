@@ -5,7 +5,9 @@ body {
   line-height: 1.6;
   font-weight: 400;
   font-family: "Open Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: rgb(50, 50, 50); }
+  color: rgb(50, 50, 50);
+  background-color: #dee8ec;
+  }
 
 
 .banner {
@@ -65,4 +67,61 @@ fuel_statistic_table {
     border-radius: 1px;
     font-weight: bold;
     color: #012e67;
+}
+
+.div_fuel_table {
+    display: inline-block;
+    width: 300px;
+    background-color: rgb(234, 204, 151);
+    border-radius: 10px;
+    padding: 20px 20px;
+    margin: 20px;
+}
+
+.label_value_liters {
+    margin: 10px;
+    font-size: 30px;
+    color: #6f2205;
+}
+
+.label_liters {
+    color: #6f2205;
+}
+
+.div_price {
+    width: 315px;
+    background-color: #c9e5ab;
+    border-radius: 10px;
+    padding: 20px 20px;
+    margin: 20px;
+    display: inline-block;
+}
+
+.label_value_price {
+    margin: 10px;
+    font-size: 30px;
+    color: #1b511a;
+}
+
+.label_price {
+    color: #1b511a;
+}
+
+.div_mileage {
+    width: 315px;
+    background-color: #ffbdb3;
+    border-radius: 10px;
+    padding: 20px 20px;
+    margin: 20px;
+    display: inline-block;
+}
+
+.label_value_mileage {
+    margin: 10px;
+    font-size: 30px;
+    color: #ec4f43;
+}
+
+.label_mileage {
+    color: #ec4f43;
 }

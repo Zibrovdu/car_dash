@@ -104,13 +104,37 @@ def get_weeks(start_week, start_year, finish_week, finish_year):
     last_week_of_start_year = date(start_year, 12, 31).isocalendar()[1]
 
     start_period = [{"label": f'Неделя {i} ({get_period(year=start_year, week=i)})',
-                     "value": i} for i in range(start_week, last_week_of_start_year + 1)]
-    end_period = [{"label": f'Неделя {i} ({get_period(year=finish_year, week=i)})', "value": i}
-                  for i in range(1, finish_week + 1)]
+                     "value": "_".join([str(i), str(start_year)])} for i in
+                    range(start_week, last_week_of_start_year + 1)]
+    end_period = [
+        {"label": f'Неделя {i} ({get_period(year=finish_year, week=i)})', "value": "_".join([str(i), str(finish_year)])}
+        for i in range(1, finish_week + 1)]
 
-    for item in end_period:
-        start_period.append(item)
-    start_period.reverse()
+    if finish_year - start_year <= 1:
+        for item in end_period:
+            start_period.append(item)
+        start_period.reverse()
+    else:
+        years_dict = {}
+        for count in range(1, (finish_year - start_year)):
+            if date(start_year + count, 12, 31).isocalendar()[2] < 4:
+                years_dict[start_year + count] = date(start_year + count, 12, 31 - date(start_year + count, 12, 31).
+                                                      isocalendar()[2]).isocalendar()[1]
+            else:
+                years_dict[start_year + count] = date(start_year + count, 12, 31).isocalendar()[1]
+
+        addition_period = []
+        for year in years_dict.keys():
+            addition_period.append(
+                [{"label": f'Неделя {i} ({get_period(year=year, week=i)})', "value": "_".join([str(i), str(year)])}
+                 for i in range(1, years_dict[year] + 1)])
+
+        for period in addition_period:
+            for item in period:
+                start_period.append(item)
+        for item in end_period:
+            start_period.append(item)
+        start_period.reverse()
 
     return start_period
 
@@ -255,7 +279,7 @@ def choosen_type(type_period, start_date, end_date, ch_month, ch_week):
     return period_choice, week_choice, month_choice
 
 
-def get_filtered_df(table_name, start_date, end_date, ch_month, ch_week, type_period):
+def get_filtered_df(table_name, start_date, end_date, ch_month, ch_week, ch_week_year, type_period):
     """
     Синтаксис:
     ----------
@@ -296,7 +320,7 @@ def get_filtered_df(table_name, start_date, end_date, ch_month, ch_week, type_pe
             SELECT * 
             FROM {table_name} 
             WHERE month_open = {int(ch_month)}""", con=lc.conn_string)
-        df.timedelta = pd.to_timedelta(df.timedelta)
+
         return df
 
     elif type_period == 'p':
@@ -306,13 +330,14 @@ def get_filtered_df(table_name, start_date, end_date, ch_month, ch_week, type_pe
             WHERE reg_date >= '{start_date} 00:00:00' 
                 AND reg_date <='{end_date} 23:59:59'
         """, con=lc.conn_string)
-        df.timedelta = pd.to_timedelta(df.timedelta)
+
         return df
     else:
         df = pd.read_sql(f"""
             SELECT * 
             FROM {table_name} 
-            WHERE week_open = {int(ch_week)}
+            WHERE EXTRACT(year from date) = {ch_week_year}
+            AND EXTRACT(week from date) = {ch_week}
         """, con=lc.conn_string)
-        df.timedelta = pd.to_timedelta(df.timedelta)
+
         return df
