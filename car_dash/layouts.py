@@ -29,6 +29,9 @@ def serve_layout():
                           finish_week=finish_week,
                           finish_year=finish_year)
 
+    tab_selected_style = dict(backgroundColor='#dee8ec',
+                              fontWeight='bold')
+
     layout = html.Div([
         html.Div([
             html.H2('HONDA The power of dreams'),
@@ -105,34 +108,40 @@ def serve_layout():
                             children=[
                                 html.Div([
                                     html.Div([
-                                        html.Label('Количество литров:', className='label_liters'),
-                                        html.Label(id='avg_liters', className='label_value_liters')
-                                    ]),
-                                ], className='div_count_liters'),
-                                html.Div([
+                                        html.Div([
+                                            html.Label('Количество литров:', className='label_liters'),
+                                            html.Label(id='avg_liters', className='label_value_liters')
+                                        ]),
+                                    ], className='div_count_liters'),  # Карточка "Количество литров"
                                     html.Div([
-                                        html.Label('Средняя стоимость литра, руб:', className='label_price'),
-                                        html.Label(id='avg_price', className='label_value_price')
-                                    ]),
-                                ], className='div_price'),
-                                html.Div([
+                                        html.Div([
+                                            html.Label('Средняя стоимость литра, руб:', className='label_price'),
+                                            html.Label(id='avg_price', className='label_value_price')
+                                        ]),
+                                    ], className='div_price'),  # Карточка "Средняя стоимость литра"
                                     html.Div([
-                                        html.Label('Средний расход:', className='label_fuel_flow'),
-                                        html.Label(id='fuel_flow', className='label_value_fuel_flow')
-                                    ])
-                                ], className='div_fuel_flow'),
+                                        html.Div([
+                                            html.Label('Средний расход:', className='label_fuel_flow'),
+                                            html.Label(id='fuel_flow', className='label_value_fuel_flow')
+                                        ])
+                                    ], className='div_fuel_flow'),  # Карточка "Средний расход"
+                                ], className='div_cards'),
                                 html.Div([
                                     dt.DataTable(id='main_fuel_table')
                                 ], className='div_fuel_main_table'),
-                            ]
+                            ],
+                            selected_style=tab_selected_style
                         ),
                         dcc.Tab(
                             id='repair_tab',
                             value='repair',
                             label='Запчасти и работы',
-                            children=[]
+                            children=[],
+                            selected_style=tab_selected_style
                         )
-                    ])
+                    ], colors=dict(border='#dee8ec',
+                                   primary='#df0326',
+                                   background='#b1d5fa'))
             ])
         ])
     ])

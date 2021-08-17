@@ -142,3 +142,9 @@ fuel_statistic_table {
     border-radius: 10px;
     margin: auto;
 }
+.div_cards {
+    /*display: inline-flex;
+    justify-content: center;
+    align-items: center;*/
+    margin: 0 5px;
+}
