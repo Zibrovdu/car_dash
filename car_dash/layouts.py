@@ -10,12 +10,10 @@ import car_dash.load_data as ld
 
 
 def serve_layout():
-    fuel_data_df = ld.load_fuel_data(table=lc.fuel_data_table, con=lc.conn_string)
+    start_params = ld.get_start_params(table=lc.fuel_data_table, con=lc.conn_string)
 
-    start_week, start_month = fuel_data_df['date'].min().week, fuel_data_df['date'].min().month,
-    start_year = fuel_data_df['date'].min().year
-    finish_week, finish_month = fuel_data_df['date'].max().week, fuel_data_df['date'].max().month
-    finish_year = fuel_data_df['date'].max().year
+    start_week, start_month, start_year = start_params[0][0], start_params[0][1], start_params[0][2]
+    finish_week, finish_month, finish_year = start_params[1][0], start_params[1][1], start_params[1][2]
 
     choice_type = [dict(label='Неделя', value='w'),
                    dict(label='Месяц', value='m'),
@@ -30,7 +28,6 @@ def serve_layout():
                           start_year=start_year,
                           finish_week=finish_week,
                           finish_year=finish_year)
-    print(d_week)
 
     layout = html.Div([
         html.Div([
@@ -60,7 +57,7 @@ def serve_layout():
                                                  options=d_month,
                                                  searchable=False,
                                                  clearable=False,
-                                                 value=finish_month,
+                                                 value='_'.join([str(finish_month), str(finish_year)]),
                                                  disabled=False
                                                  )],
                                    className='wrapper-dropdown-3',
@@ -99,7 +96,7 @@ def serve_layout():
             html.Div([
                 dcc.Tabs(
                     id='',
-                    value='',
+                    value='fuel',
                     children=[
                         dcc.Tab(
                             id='fuel_tab',
@@ -107,33 +104,26 @@ def serve_layout():
                             value='fuel',
                             children=[
                                 html.Div([
-                                    html.Label('Количество литров:', className='label_liters'),
-                                    html.Label(id='avg_liters', className='label_value_liters')
-                                    # html.Table([
-                                    #     html.Tr([
-                                    #         html.Td('Average liters'),
-                                    #         html.Td('Average price')
-                                    #     ]),
-                                    #     html.Tr([
-                                    #         html.Td(id='avg_liters'),
-                                    #         html.Td(id='avg_price')
-                                    #     ])
-                                    # ], className='fuel_statistic_table'),
-                                ], className='div_fuel_table'),
+                                    html.Div([
+                                        html.Label('Количество литров:', className='label_liters'),
+                                        html.Label(id='avg_liters', className='label_value_liters')
+                                    ]),
+                                ], className='div_count_liters'),
                                 html.Div([
-                                    html.Label('Средняя стоимость литра, руб:', className='label_price'),
-                                    html.Label(id='avg_price', className='label_value_price')
+                                    html.Div([
+                                        html.Label('Средняя стоимость литра, руб:', className='label_price'),
+                                        html.Label(id='avg_price', className='label_value_price')
+                                    ]),
                                 ], className='div_price'),
                                 html.Div([
-                                    html.Label('Пробег:', className='label_mileage'),
-                                    html.Label(id='mileage', className='label_value_mileage')
-                                ], className='div_mileage'),
-
-
-                                dt.DataTable(id='main_fuel_table',
-                                             data=fuel_data_df.to_dict('records'),
-                                             columns=ld.fuel_data_columns(fuel_data_df)
-                                             )
+                                    html.Div([
+                                        html.Label('Средний расход:', className='label_fuel_flow'),
+                                        html.Label(id='fuel_flow', className='label_value_fuel_flow')
+                                    ])
+                                ], className='div_fuel_flow'),
+                                html.Div([
+                                    dt.DataTable(id='main_fuel_table')
+                                ], className='div_fuel_main_table'),
                             ]
                         ),
                         dcc.Tab(

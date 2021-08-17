@@ -69,13 +69,15 @@ fuel_statistic_table {
     color: #012e67;
 }
 
-.div_fuel_table {
-    display: inline-block;
-    width: 300px;
+.div_count_liters {
+    width: 375px;
     background-color: rgb(234, 204, 151);
     border-radius: 10px;
-    padding: 20px 20px;
+    padding: 20px 15px;
     margin: 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .label_value_liters {
@@ -86,15 +88,18 @@ fuel_statistic_table {
 
 .label_liters {
     color: #6f2205;
+    font-size: 19px;
 }
 
 .div_price {
-    width: 315px;
+    width: 375px;
     background-color: #c9e5ab;
     border-radius: 10px;
-    padding: 20px 20px;
+    padding: 20px 15px;
     margin: 20px;
-    display: inline-block;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .label_value_price {
@@ -105,23 +110,35 @@ fuel_statistic_table {
 
 .label_price {
     color: #1b511a;
+    font-size: 19px;
 }
 
-.div_mileage {
-    width: 315px;
+.div_fuel_flow {
+    width: 375px;
     background-color: #ffbdb3;
     border-radius: 10px;
-    padding: 20px 20px;
+    padding: 20px 15px;
     margin: 20px;
-    display: inline-block;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.label_value_mileage {
+.label_value_fuel_flow {
     margin: 10px;
     font-size: 30px;
     color: #ec4f43;
 }
 
-.label_mileage {
+.label_fuel_flow {
     color: #ec4f43;
+    font-size: 19px;
+}
+
+.div_fuel_main_table {
+    background-color: #bb99b7;
+    padding: 30px 15px;
+    width: 95%;
+    border-radius: 10px;
+    margin: auto;
 }

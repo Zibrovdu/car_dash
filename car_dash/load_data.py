@@ -17,14 +17,18 @@ end_year = (date.today() - timedelta(days=7)).year
 
 def load_fuel_data(table, con):
     df = pd.read_sql(f"""SELECT * FROM {table}""", con=con)
-    df[['total', 'liters', 'price']].float_format = '%.00f'
+    # df[['total', 'liters', 'price']].float_format = '%.00f'
+    df.loc[df[df['date'].notna()].index, 'date'] = df[df['date'].notna()]['date'].apply(
+        lambda x: x.strftime('%d-%m-%Y'))
+    df.columns = ['Дата', 'Время', 'Заправлено, л.', 'цена, руб/л.', 'Итого', 'Заправка', 'Адрес заправки', 'Пробег',
+                  'Пробег за период', 'Ср. расход, л/100 км.', 'Примечания']
     return df
 
 
 def fuel_data_columns(df):
     list_of_columns = []
     for i, column_type in enumerate(df.dtypes):
-        if df.dtypes.index[i] == 'odometr':
+        if df.dtypes.index[i] == 'Пробег за период':
             list_of_columns.append(dict(name=df.dtypes.index[i], id=df.dtypes.index[i], type='numeric',
                                         format=Format(precision=1, scheme=Scheme.fixed)))
         elif column_type == 'float64':
@@ -62,14 +66,34 @@ def get_months(start_month, start_year, finish_month, finish_year):
     ----------
         **List**
     """
-    start_period = [{"label": f'{get_period_month(year=start_year, month=i)}', "value": i}
-                    for i in range(start_month, 13)]
-    end_period = [{"label": f'{get_period_month(year=finish_year, month=i)}', "value": i}
-                  for i in range(1, finish_month + 1)]
+    start_period = [
+        {"label": f'{get_period_month(year=start_year, month=i)}', "value": "_".join([str(i), str(start_year)])}
+        for i in range(start_month, 13)]
+    end_period = [
+        {"label": f'{get_period_month(year=finish_year, month=i)}', "value": "_".join([str(i), str(finish_year)])}
+        for i in range(1, finish_month + 1)]
 
-    for item in end_period:
-        start_period.append(item)
-    start_period.reverse()
+    if finish_year - start_year <= 1:
+        for item in end_period:
+            start_period.append(item)
+        start_period.reverse()
+    else:
+        years_list = []
+        for count in range(1, finish_year - start_year):
+            years_list.insert(count, start_year + count)
+
+        addition_period = []
+        for year in years_list:
+            addition_period.append(
+                [{"label": f'{get_period_month(year=year, month=i)}', "value": "_".join([str(i), str(year)])} for i in
+                 range(1, 13)])
+
+        for period in addition_period:
+            for item in period:
+                start_period.append(item)
+        for item in end_period:
+            start_period.append(item)
+        start_period.reverse()
 
     return start_period
 
@@ -262,24 +286,25 @@ def choosen_type(type_period, start_date, end_date, ch_month, ch_week):
         period_choice = True
         week_choice = True
         month_choice = False
-        lw.log_writer(log_msg=f'User choice "month = {ch_month}"')
+        lw.log_writer(log_msg=f'Пользователь выбрал месяц, "выбранный месяц - {ch_month}"')
 
     elif type_period == 'p':
         period_choice = False
         week_choice = True
         month_choice = True
-        lw.log_writer(log_msg=f'User choice "range period start = {start_date}, end = {end_date}"')
+        lw.log_writer(log_msg=f'Пользователь выбрал произвольный период "период с {start_date}, по {end_date}"')
 
     else:
         period_choice = True
         week_choice = False
         month_choice = True
-        lw.log_writer(log_msg=f'User choice "week = {ch_week} ({get_period(year=current_year, week=ch_week)})"')
+        lw.log_writer(log_msg=f'Пользователь выбрал неделя "выбранная неделя - {ch_week} '
+                              f'({get_period(year=current_year, week=ch_week)})"')
 
     return period_choice, week_choice, month_choice
 
 
-def get_filtered_df(table_name, start_date, end_date, ch_month, ch_week, ch_week_year, type_period):
+def get_filtered_df(table_name, start_date, end_date, month, month_year, week, week_year, type_period):
     """
     Синтаксис:
     ----------
@@ -319,7 +344,14 @@ def get_filtered_df(table_name, start_date, end_date, ch_month, ch_week, ch_week
         df = pd.read_sql(f"""
             SELECT * 
             FROM {table_name} 
-            WHERE month_open = {int(ch_month)}""", con=lc.conn_string)
+            WHERE EXTRACT(month from date) = {int(month)}
+            AND EXTRACT(year from date) = {int(month_year)}
+        """, con=lc.conn_string)
+        df.loc[df[df['date'].notna()].index, 'date'] = df[df['date'].notna()]['date'].apply(
+            lambda x: x.strftime('%d-%m-%Y'))
+        df.columns = ['Дата', 'Время', 'Заправлено, л.', 'цена, руб/л.', 'Итого', 'Заправка', 'Адрес заправки',
+                      'Пробег',
+                      'Пробег за период', 'Ср. расход, л/100 км.', 'Примечания']
 
         return df
 
@@ -327,17 +359,34 @@ def get_filtered_df(table_name, start_date, end_date, ch_month, ch_week, ch_week
         df = pd.read_sql(f"""
             SELECT * 
             FROM {table_name} 
-            WHERE reg_date >= '{start_date} 00:00:00' 
-                AND reg_date <='{end_date} 23:59:59'
+            WHERE date >= '{start_date} 00:00:00' 
+                AND date <='{end_date} 23:59:59'
         """, con=lc.conn_string)
+        df.loc[df[df['date'].notna()].index, 'date'] = df[df['date'].notna()]['date'].apply(
+            lambda x: x.strftime('%d-%m-%Y'))
+        df.columns = ['Дата', 'Время', 'Заправлено, л.', 'цена, руб/л.', 'Итого', 'Заправка', 'Адрес заправки',
+                      'Пробег',
+                      'Пробег за период', 'Ср. расход, л/100 км.', 'Примечания']
 
         return df
     else:
         df = pd.read_sql(f"""
             SELECT * 
             FROM {table_name} 
-            WHERE EXTRACT(year from date) = {ch_week_year}
-            AND EXTRACT(week from date) = {ch_week}
+            WHERE EXTRACT(year from date) = {week_year}
+            AND EXTRACT(week from date) = {week}
         """, con=lc.conn_string)
-
+        df.loc[df[df['date'].notna()].index, 'date'] = df[df['date'].notna()]['date'].apply(
+            lambda x: x.strftime('%d-%m-%Y'))
+        df.columns = ['Дата', 'Время', 'Заправлено, л.', 'цена, руб/л.', 'Итого', 'Заправка', 'Адрес заправки',
+                      'Пробег',
+                      'Пробег за период', 'Ср. расход, л/100 км.', 'Примечания']
         return df
+
+
+def get_start_params(table, con):
+    df = pd.read_sql(f"""SELECT date FROM {table}""", con=con)
+    start_period = (df['date'].min().week, df['date'].min().month, df['date'].min().year)
+    finish_period = (df['date'].max().week, df['date'].max().month, df['date'].max().year)
+
+    return start_period, finish_period
