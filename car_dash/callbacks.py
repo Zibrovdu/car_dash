@@ -1,4 +1,5 @@
-from dash.dependencies import Input, Output
+import dash
+from dash.dependencies import Input, Output, State
 
 import car_dash.load_data as ld
 import car_dash.load_cfg as lc
@@ -49,3 +50,14 @@ def register_callbacks(app):
 
         return (period_choice, month_choice, week_choice, avg_liters, avg_price, fuel_flow,
                 filtered_fuel_data_df.to_dict('records'), fuel_columns)
+
+    @app.callback(
+        Output('lbl_change_oil', 'children'),
+        Input('submit_odometr_btn', 'n_clicks'),
+        State('curr_odometr_input', 'value')
+    )
+    def need_change_engine_oil(clicks, value):
+        if clicks:
+            return value
+        return dash.no_update
+

@@ -41,60 +41,91 @@ def serve_layout():
         ], className="banner"),
         html.Div([
             html.Div([
-                html.Div([html.Div([html.Label("Выберите период: ")],
-                                   className='wrapper-dropdown-4')],
-                         className='bblock'),
-                html.Div([html.Div([dcc.Dropdown(id='choice_type',
-                                                 options=choice_type,
-                                                 searchable=False,
-                                                 clearable=False,
-                                                 optionHeight=50,
-                                                 value='w',
-                                                 disabled=False)
-                                    ],
-                                   className='wrapper-dropdown-3',
-                                   style=dict(width='295px',
-                                              display='block'))],
-                         className='bblock'),  # choice period dropdown
-                html.Div([html.Div([dcc.Dropdown(id='month_choice',
-                                                 options=d_month,
-                                                 searchable=False,
-                                                 clearable=False,
-                                                 value='_'.join([str(finish_month), str(finish_year)]),
-                                                 disabled=False
-                                                 )],
-                                   className='wrapper-dropdown-3',
-                                   style=dict(width='190px'))],
-                         className='bblock'), ]),  # Month_choice dropdown
-            html.Div([html.Div([dcc.Dropdown(id='week_choice',
-                                             options=d_week,
-                                             searchable=False,
-                                             clearable=False,
-                                             value='_'.join([str(finish_week), str(finish_year)]),
-                                             style=dict(width='100%',
-                                                        heigth='60px'),
-                                             disabled=False
-                                             )],
-                               className='wrapper-dropdown-3',
-                               style=dict(width='420px'))],
-                     className='bblock'),  # Week_choice dropdown
-            html.Div([html.Div([dcc.DatePickerRange(id='period_choice',
-                                                    display_format='DD-MM-YYYY',
-                                                    min_date_allowed=datetime.date(start_year, start_month, 1),
-                                                    max_date_allowed=datetime.date(finish_year, finish_month,
-                                                                                   calendar.monthrange(finish_year,
-                                                                                                       finish_month)[
-                                                                                       1]),
-                                                    start_date=datetime.date(ld.end_year, ld.end_month,
-                                                                             ld.end_day),
-                                                    end_date=datetime.date(ld.current_year, ld.current_month,
-                                                                           ld.current_day),
-                                                    updatemode='bothdates',
-                                                    style=dict(background='#b1d5fa'),
-                                                    clearable=False
-                                                    )])], className='bblock',
-                     style=dict(heigth='45px')),  # Period_choice range picker
+                html.Div([
+                    html.Div([
+                        html.Label("Выберите период: ")
+                    ],
+                        className='wrapper-dropdown-4'
+                    )
+                ],
+                    className='bblock'),
+                html.Div([
+                    html.Div([
+                        dcc.Dropdown(id='choice_type',
+                                     options=choice_type,
+                                     searchable=False,
+                                     clearable=False,
+                                     optionHeight=50,
+                                     value='w',
+                                     disabled=False)
+                    ],
+                        className='wrapper-dropdown-3',
+                        style=dict(width='295px',
+                                   display='block')
+                    )
+                ],
+                    className='bblock'),  # choice period dropdown
+                html.Div([
+                    html.Div([
+                        dcc.Dropdown(id='month_choice',
+                                     options=d_month,
+                                     searchable=False,
+                                     clearable=False,
+                                     value='_'.join([str(finish_month), str(finish_year)]),
+                                     disabled=False
+                                     )
+                    ],
+                        className='wrapper-dropdown-3',
+                        style=dict(width='190px')
+                    ),
+                ],
+                    className='bblock'),
+            ]),  # Month_choice dropdown
+            html.Div([
+                html.Div([
+                    dcc.Dropdown(id='week_choice',
+                                 options=d_week,
+                                 searchable=False,
+                                 clearable=False,
+                                 value='_'.join([str(finish_week), str(finish_year)]),
+                                 style=dict(width='100%',
+                                            heigth='60px'),
+                                 disabled=False)
+                ],
+                    className='wrapper-dropdown-3',
+                    style=dict(width='420px')
+                )
+            ],
+                className='bblock'),  # Week_choice dropdown
+            html.Div([
+                html.Div([
+                    dcc.DatePickerRange(id='period_choice',
+                                        display_format='DD-MM-YYYY',
+                                        min_date_allowed=datetime.date(start_year, start_month, 1),
+                                        max_date_allowed=datetime.date(finish_year, finish_month, calendar.monthrange(
+                                            finish_year, finish_month)[1]),
+                                        start_date=datetime.date(ld.end_year, ld.end_month, ld.end_day),
+                                        end_date=datetime.date(ld.current_year, ld.current_month, ld.current_day),
+                                        updatemode='bothdates',
+                                        style=dict(background='#b1d5fa'),
+                                        clearable=False
+                                        )
+                ])
+            ], className='bblock', style=dict(heigth='45px')),  # Period_choice range picker
         ], style=dict(background='#b1d5fa')),
+        html.Div([
+            html.Div([
+                dcc.Input(id='curr_odometr_input',
+                          className='input_curr_odometr'),
+                html.Button(id='submit_odometr_btn',
+                            n_clicks=0,
+                            children='Проверить',
+                            className='btn_confirm_odometr'),
+                html.Label(id='lbl_change_oil',
+                           className='wrapper-dropdown-3')
+            ])
+        ], className='div_change_oil'),
+
         html.Div([
             html.Div([
                 dcc.Tabs(
