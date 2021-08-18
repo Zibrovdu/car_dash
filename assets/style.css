@@ -172,3 +172,67 @@ fuel_statistic_table {
     border-radius: 10px;
     border-color: silver;
 }
+
+table {
+font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+font-size: 14px;
+border-radius: 10px;
+border-spacing: 0;
+text-align: center;
+}
+th {
+background: #b1d5fa;
+color: green;
+text-shadow: 0 1px 1px #2D2020;
+padding: 10px 20px;
+}
+th, td {
+border-style: solid;
+border-width: 0 1px 1px 0;
+border-color: white;
+}
+th:first-child, td:first-child {
+text-align: left;
+}
+th:first-child {
+border-top-left-radius: 10px;
+}
+th:last-child {
+border-top-right-radius: 10px;
+border-right: none;
+}
+td {
+padding: 10px 20px;
+/*background: #c9e5ab;*/
+}
+tr:last-child td:first-child {
+border-radius: 0 0 0 10px;
+}
+tr:last-child td:last-child {
+border-radius: 0 0 10px 0;
+}
+tr td:last-child {
+border-right: none;
+}
+/*
+table2 {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+  font-size: 14px;
+  background: white;
+  max-width: 70%;
+  width: 70%;
+  border-collapse: collapse;
+  text-align: center;
+}
+th {
+  font-weight: normal;
+  color: #039;
+
+  padding: 10px 8px;
+}
+td {
+  color: #669;
+  padding: 9px 8px;
+  transition: .3s linear;
+}
+tr:hover td {color: #33ccff;}

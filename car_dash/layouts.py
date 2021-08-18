@@ -7,6 +7,7 @@ import dash_table as dt
 
 import car_dash.load_cfg as lc
 import car_dash.load_data as ld
+import car_dash.date_cfg as dc
 
 
 def serve_layout():
@@ -19,12 +20,12 @@ def serve_layout():
                    dict(label='Месяц', value='m'),
                    dict(label='Произвольный период', value='p')]
 
-    d_month = ld.get_months(start_month=start_month,
+    d_month = dc.get_months(start_month=start_month,
                             start_year=start_year,
                             finish_month=finish_month,
                             finish_year=finish_year)
 
-    d_week = ld.get_weeks(start_week=start_week,
+    d_week = dc.get_weeks(start_week=start_week,
                           start_year=start_year,
                           finish_week=finish_week,
                           finish_year=finish_year)
@@ -115,23 +116,117 @@ def serve_layout():
         ], style=dict(background='#b1d5fa')),
         html.Div([
             html.Div([
+                html.Label('Текущий пробег:', id='curr_odo'),
                 dcc.Input(id='curr_odometr_input',
+                          type='number',
+                          inputMode='numeric',
+                          value=ld.get_param(
+                              field=lc.odometer_total_field,
+                              table=lc.fuel_data_table,
+                              con=lc.conn_string),
+                          minLength=len(str(ld.get_param(
+                              field=lc.odometer_total_field,
+                              table=lc.fuel_data_table,
+                              con=lc.conn_string))),
                           className='input_curr_odometr'),
                 html.Button(id='submit_odometr_btn',
                             n_clicks=0,
-                            children='Проверить',
+                            children='Установить',
                             className='btn_confirm_odometr'),
                 html.Label(id='lbl_change_oil',
                            className='wrapper-dropdown-3')
             ])
-        ], className='div_change_oil'),
+        ], className='div_change_oil', id='change_oil_div'),
 
         html.Div([
             html.Div([
                 dcc.Tabs(
                     id='',
-                    value='fuel',
+                    value='summary',
                     children=[
+                        dcc.Tab(
+                            id='summary',
+                            label='Суммарная информация',
+                            value='summary',
+                            children=[
+                                html.Div([
+                                    html.Div([
+                                        html.Table([
+                                            html.Th([
+                                                html.Label('operation')
+                                            ]),
+                                            html.Th([
+                                                html.Label('current odo')
+                                            ]),
+                                            html.Th([
+                                                html.Label('prev_odo')
+                                            ]),
+                                            html.Tr([
+                                                html.Td([
+                                                    html.Label('Замена масла в ДВС')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_oil_dvs_curr_odo')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_oil_dvs_prev_odo')
+                                                ])
+                                            ], id='row_1'),
+                                            html.Tr([
+                                                html.Td([
+                                                    html.Label('Замена масла в КПП')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_oil_kpp_curr_odo')
+                                                ])
+                                            ]),
+                                            html.Tr([
+                                                html.Td([
+                                                    html.Label('Замена воздушного фильтра')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_filter_dvs_curr_odo')
+                                                ])
+                                            ]),
+                                            html.Tr([
+                                                html.Td([
+                                                    html.Label('Замена фильтра салона')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_filter_salon_curr_odo')
+                                                ])
+                                            ]),
+                                            html.Tr([
+                                                html.Td([
+                                                    html.Label('Замена резинок стеклоочистителей')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_rubbers_curr_odo')
+                                                ])
+                                            ]),
+                                            html.Tr([
+                                                html.Td([
+                                                    html.Label('Замена тормозной жидкости')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_brake_fluid_curr_odo')
+                                                ])
+                                            ]),
+                                            html.Tr([
+                                                html.Td([
+                                                    html.Label('Регулировка клапанов ДВС')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_valves_curr_odo')
+                                                ])
+                                            ]),
+                                        ])
+                                    ], style=dict(padding='40px'))
+                                ])
+
+                            ],
+                            selected_style=tab_selected_style
+                        ),
                         dcc.Tab(
                             id='fuel_tab',
                             label='Топливо',
