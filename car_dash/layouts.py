@@ -116,27 +116,41 @@ def serve_layout():
         ], style=dict(background='#b1d5fa')),
         html.Div([
             html.Div([
-                html.Label('Текущий пробег:', id='curr_odo'),
-                dcc.Input(id='curr_odometr_input',
-                          type='number',
-                          inputMode='numeric',
-                          value=ld.get_param(
-                              field=lc.odometer_total_field,
-                              table=lc.fuel_data_table,
-                              con=lc.conn_string),
-                          minLength=len(str(ld.get_param(
-                              field=lc.odometer_total_field,
-                              table=lc.fuel_data_table,
-                              con=lc.conn_string))),
-                          className='input_curr_odometr'),
-                html.Button(id='submit_odometr_btn',
-                            n_clicks=0,
-                            children='Установить',
-                            className='btn_confirm_odometr'),
-                html.Label(id='lbl_change_oil',
-                           className='wrapper-dropdown-3')
+                html.Label(
+                    'Текущий пробег:',
+                    id='curr_odo'
+                ),
+                dcc.Input(
+                    id='curr_odometr_input',
+                    type='number',
+                    inputMode='numeric',
+                    value=ld.get_param(
+                        field=lc.odometer_total_field,
+                        table=lc.fuel_data_table,
+                        con=lc.conn_string
+                    ),
+                    minLength=len(str(ld.get_param(
+                        field=lc.odometer_total_field,
+                        table=lc.fuel_data_table,
+                        con=lc.conn_string
+                    ))),
+                    className='input_curr_odometr'
+                ),
+                html.Button(
+                    id='submit_odometr_btn',
+                    n_clicks=0,
+                    children='Установить',
+                    className='btn_confirm_odometr'
+                ),
+                html.Label(
+                    id='lbl_change_oil',
+                    className='wrapper-dropdown-3'
+                )
             ])
-        ], className='div_change_oil', id='change_oil_div'),
+        ],
+            className='div_change_oil',
+            id='change_oil_div'
+        ),
 
         html.Div([
             html.Div([
@@ -153,13 +167,16 @@ def serve_layout():
                                     html.Div([
                                         html.Table([
                                             html.Th([
-                                                html.Label('operation')
+                                                html.Label('Операция')
                                             ]),
                                             html.Th([
-                                                html.Label('current odo')
+                                                html.Label('Текущий пробег')
                                             ]),
                                             html.Th([
-                                                html.Label('prev_odo')
+                                                html.Label('Последняя замена')
+                                            ]),
+                                            html.Th([
+                                                html.Label('Примечания')
                                             ]),
                                             html.Tr([
                                                 html.Td([
@@ -170,8 +187,13 @@ def serve_layout():
                                                 ]),
                                                 html.Td([
                                                     html.Label(id='tb_oil_dvs_prev_odo')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_oil_dvs_descr')
                                                 ])
-                                            ], id='row_1'),
+                                            ],
+                                                id='engine_oil_row'
+                                            ),
                                             html.Tr([
                                                 html.Td([
                                                     html.Label('Замена масла в КПП')
@@ -186,16 +208,30 @@ def serve_layout():
                                                 ]),
                                                 html.Td([
                                                     html.Label(id='tb_filter_dvs_curr_odo')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_filter_dvs_prev_odo')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_filter_dvs_descr')
                                                 ])
-                                            ]),
+                                            ],
+                                                id='filter_dvs_row'),
                                             html.Tr([
                                                 html.Td([
                                                     html.Label('Замена фильтра салона')
                                                 ]),
                                                 html.Td([
                                                     html.Label(id='tb_filter_salon_curr_odo')
-                                                ])
-                                            ]),
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_cabin_filter_prev_odo')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_cabin_filter_descr')
+                                                ]),
+                                            ],
+                                                id='cabin_filter_row'),
                                             html.Tr([
                                                 html.Td([
                                                     html.Label('Замена резинок стеклоочистителей')

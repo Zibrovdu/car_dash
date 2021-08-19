@@ -3,6 +3,7 @@ from dash.dependencies import Input, Output, State
 import car_dash.load_data as ld
 import car_dash.load_cfg as lc
 import car_dash.date_cfg as dc
+import car_dash.processing_data as prd
 import car_dash as cd
 
 
@@ -58,6 +59,7 @@ def register_callbacks(app):
         Output('lbl_change_oil', 'style'),
         Output('curr_odo', 'style'),
         Output('tb_oil_dvs_curr_odo', 'children'),
+        Output('tb_oil_dvs_descr', 'children'),
         Output('tb_oil_dvs_prev_odo', 'children'),
         Output('tb_oil_kpp_curr_odo', 'children'),
         Output('tb_filter_dvs_curr_odo', 'children'),
@@ -65,7 +67,13 @@ def register_callbacks(app):
         Output('tb_rubbers_curr_odo', 'children'),
         Output('tb_brake_fluid_curr_odo', 'children'),
         Output('tb_valves_curr_odo', 'children'),
-        Output('row_1', 'style'),
+        Output('engine_oil_row', 'style'),
+        Output('tb_filter_dvs_prev_odo', 'children'),
+        Output('tb_filter_dvs_descr', 'children'),
+        Output('filter_dvs_row', 'style'),
+        Output('tb_cabin_filter_prev_odo', 'children'),
+        Output('tb_cabin_filter_descr', 'children'),
+        Output('cabin_filter_row', 'style'),
         Input('submit_odometr_btn', 'n_clicks'),
         State('curr_odometr_input', 'value')
     )
@@ -74,38 +82,75 @@ def register_callbacks(app):
             field=lc.odometer_total_field,
             table=lc.fuel_data_table,
             con=lc.conn_string)
-        last_odometer_service = ld.last_odometer_service(
+        repair_df = ld.prepare_df_to_calc(
             table=lc.repair_data_table,
             con=lc.conn_string,
-            data_field=lc.odometer,
-            filter_field=lc.service_odometer)
+        )
+        last_change_engine_oil = ld.last_change_engine_oil(
+            df=repair_df
+        )
+        last_change_air_filter = ld.last_change_air_filter(
+            df=repair_df
+        )
+        last_change_cabin_filter = ld.last_change_cabin_filter(
+            df=repair_df
+        )
+
         current_odometer = last_fuel_odometer
 
         if clicks:
             if int(value) > int(last_fuel_odometer):
                 current_odometer = value
 
-        if current_odometer < (int(last_odometer_service) + 7000):
-            style_div = dict(backgroundColor='#c9e5ab')
-            style_label = dict(color='#1b511a', fontWeight='bold')
-            style_label_tbl = dict(color='#1b511a', fontWeight='bold', background='#c9e5ab')
-            return f'Следующая замена масла в двигателе через ' \
-                   f'{(int(last_odometer_service) + 7000) - current_odometer} километров', style_div, style_label, \
-                   style_label, current_odometer, last_odometer_service, current_odometer, current_odometer,\
-                   current_odometer, current_odometer, current_odometer, current_odometer, style_label_tbl
-        elif (int(last_odometer_service) + 7000) <= current_odometer < (int(last_odometer_service) + 15000):
-            style_div = dict(backgroundColor='#efca66')
-            style_label = dict(color='#6f2205', fontWeight='bold')
-            style_label_tbl = dict(color='#6f2205', fontWeight='bold', background='#efca66')
-            return f'ВНИМАНИЕ! Необходимо заменить масло в двигателе, в течении ' \
-                   f'{(int(last_odometer_service) + 15000) - current_odometer} километров', style_div, \
-                   style_label, style_label, current_odometer, last_odometer_service, current_odometer, \
-                   current_odometer, current_odometer, current_odometer, current_odometer, current_odometer, style_label_tbl
-        else:
-            style_div = dict(backgroundColor='rgb(223, 3, 38)')
-            style_label = dict(color='white', fontWeight='bold', fontSize='18px')
-            style_label_tbl = dict(color='white', fontWeight='bold', background='rgb(223, 3, 38)')
-            return f'ВНИМАНИЕ! ПЕРЕПРОБЕГ {current_odometer - (int(last_odometer_service) + 15000)} КИЛОМЕТРОВ! ' \
-                   f'СРОЧНО ЗАМЕНИТЕ МАСЛО В ДВИГАТЕЛЕ!!!', style_div, style_label, style_label, current_odometer,\
-                   last_odometer_service, current_odometer, current_odometer, current_odometer, current_odometer, \
-                   current_odometer, current_odometer, style_label_tbl
+        msg_engine_oil, style_change_oil_div, style_lbl_change_oil, style_label_tbl = prd.calc_change_engine_oil(
+            current_odometer=current_odometer,
+            last_change_odometer=last_change_engine_oil,
+            msg_ok=lc.ok_msg_engine_oil,
+            msg_warning=lc.warning_msg_engine_oil,
+        )
+        msg_air_filter, style_change_f_div, style_lbl_air_filter, style_label_air_filter = prd.calc_change_engine_oil(
+            current_odometer=current_odometer,
+            last_change_odometer=last_change_air_filter,
+            msg_ok=lc.ok_msg_air_filter,
+            msg_warning=lc.warning_msg_air_filter,
+        )
+        msg_cabin_filter, style_change_cf_div, style_lbl_cabin_filter, style_label_cabin_filter = \
+            prd.calc_change_engine_oil(
+                current_odometer=current_odometer,
+                last_change_odometer=last_change_cabin_filter,
+                msg_ok=lc.ok_msg_cabin_filter,
+                msg_warning=lc.warning_msg_cabin_filter,
+            )
+
+        return (msg_engine_oil, style_change_oil_div, style_lbl_change_oil, style_lbl_change_oil, current_odometer,
+                msg_engine_oil, last_change_engine_oil, current_odometer, current_odometer, current_odometer,
+                current_odometer, current_odometer, current_odometer, style_label_tbl, last_change_air_filter,
+                msg_air_filter, style_label_air_filter, last_change_cabin_filter, msg_cabin_filter,
+                style_label_cabin_filter)
+
+        # if current_odometer < (int(last_change_engine_oil) + 7000):
+        #     style_div = dict(backgroundColor='#c9e5ab')
+        #     style_label = dict(color='#1b511a', fontWeight='bold')
+        #     style_label_tbl = dict(color='#1b511a', fontWeight='bold', background='#c9e5ab')
+        #     return f'Следующая замена масла в двигателе через ' \
+        #            f'{(int(last_change_engine_oil) + 7000) - current_odometer} километров', style_div, style_label, \
+        #            style_label, current_odometer, last_change_engine_oil, current_odometer, current_odometer,\
+        #            current_odometer, current_odometer, current_odometer, current_odometer, style_label_tbl,
+        #            last_change_air_filter
+        # elif (int(last_change_engine_oil) + 7000) <= current_odometer < (int(last_change_engine_oil) + 15000):
+        #     style_div = dict(backgroundColor='#efca66')
+        #     style_label = dict(color='#6f2205', fontWeight='bold')
+        #     style_label_tbl = dict(color='#6f2205', fontWeight='bold', background='#efca66')
+        #     return f'ВНИМАНИЕ! Необходимо заменить масло в двигателе, в течении ' \
+        #            f'{(int(last_change_engine_oil) + 15000) - current_odometer} километров', style_div, \
+        #            style_label, style_label, current_odometer, last_change_engine_oil, current_odometer, \
+        #            current_odometer, current_odometer, current_odometer, current_odometer, current_odometer, \
+        #            style_label_tbl, last_change_air_filter
+        # else:
+        #     style_div = dict(backgroundColor='rgb(223, 3, 38)')
+        #     style_label = dict(color='white', fontWeight='bold', fontSize='18px')
+        #     style_label_tbl = dict(color='white', fontWeight='bold', background='rgb(223, 3, 38)')
+        #     return f'ВНИМАНИЕ! ПЕРЕПРОБЕГ {current_odometer - (int(last_change_engine_oil) + 15000)} КИЛОМЕТРОВ! ' \
+        #            f'СРОЧНО ЗАМЕНИТЕ МАСЛО В ДВИГАТЕЛЕ!!!', style_div, style_label, style_label, current_odometer,\
+        #            last_change_engine_oil, current_odometer, current_odometer, current_odometer, current_odometer, \
+        #            current_odometer, current_odometer, style_label_tbl, last_change_air_filter

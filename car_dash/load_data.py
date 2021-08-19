@@ -114,11 +114,36 @@ def get_param(field, table, con):
     return pd.read_sql(f'select {field} from {table} order by {field} desc limit 1', con=con)[f'{field}'].values[0]
 
 
-def last_odometer_service(table, con, **kwargs):
-    if not kwargs:
-        return 0
-    if len(kwargs) == 2:
-        return pd.read_sql(f"select {kwargs['data_field']} from {table} where {kwargs['filter_field']} IS NOT NULL",
-                           con=con).tail(1)[f'{kwargs["data_field"]}'].values[0]
+def prepare_df_to_calc(table, con):
+    df = pd.read_sql(f"""SELECT "Наименование товара", Пробег FROM {table}""", con=con)
+    df['Пробег'] = df['Пробег'].fillna(0)
+    df['Пробег'] = df['Пробег'].apply(lambda x: str(x)[2:] if str(x)[0] == '~' else x)
+    df['Пробег'] = df['Пробег'].apply(lambda x: str(x).replace(' ', ''))
+    df.loc[df[df['Пробег'] == '-'].index, 'Пробег'] = 0
+    df['Пробег'] = df['Пробег'].astype(int)
+    return df
 
 
+def last_change_engine_oil(df):
+    df['Межсервис_ДВС'] = df[(df['Наименование товара'].str.contains('амена масла')) | (
+        df['Наименование товара'].str.contains('ТО'))]['Пробег'].diff()
+    mask = df[((df['Наименование товара'].str.contains('амена масла')) | (df['Наименование товара'].str.contains(
+        'ТО'))) & (df['Межсервис_ДВС'].isna())].index
+    df.loc[mask, 'Межсервис_ДВС'] = 0
+    return df[df['Межсервис_ДВС'].notna()].tail(1)['Пробег'].values[0]
+
+
+def last_change_air_filter(df):
+    df['Замена ВФ'] = df[df['Наименование товара'].str.contains('Замена воздушного фильтра')]['Пробег'].diff()
+    mask = df[(df['Наименование товара'].str.contains('Замена воздушного фильтра')) & (df['Замена ВФ'].isna())].index
+    df.loc[mask, 'Замена ВФ'] = 0
+
+    return df[df['Замена ВФ'].notna()].tail(1)['Пробег'].values[0]
+
+
+def last_change_cabin_filter(df):
+    df['Замена_ФС'] = df[df['Наименование товара'].str.contains('Замена фильтра салона')]['Пробег'].diff()
+    mask = df[(df['Наименование товара'].str.contains('Замена фильтра салона')) & (df['Замена_ФС'].isna())].index
+    df.loc[mask, 'Замена_ФС'] = 0
+
+    return df[df['Замена_ФС'].notna()].tail(1)['Пробег'].values[0]
