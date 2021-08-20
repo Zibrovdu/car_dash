@@ -238,6 +238,9 @@ def serve_layout():
                                                 ]),
                                                 html.Td([
                                                     html.Label(id='tb_rubbers_curr_odo')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_rubbers_prev_odo')
                                                 ])
                                             ]),
                                             html.Tr([
@@ -246,6 +249,9 @@ def serve_layout():
                                                 ]),
                                                 html.Td([
                                                     html.Label(id='tb_brake_fluid_curr_odo')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_brake_fluid_prev_odo')
                                                 ])
                                             ]),
                                             html.Tr([
@@ -254,6 +260,9 @@ def serve_layout():
                                                 ]),
                                                 html.Td([
                                                     html.Label(id='tb_valves_curr_odo')
+                                                ]),
+                                                html.Td([
+                                                    html.Label(id='tb_valves_prev_odo')
                                                 ])
                                             ]),
                                         ])

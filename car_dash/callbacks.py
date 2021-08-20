@@ -74,6 +74,9 @@ def register_callbacks(app):
         Output('tb_cabin_filter_prev_odo', 'children'),
         Output('tb_cabin_filter_descr', 'children'),
         Output('cabin_filter_row', 'style'),
+        Output('tb_brake_fluid_prev_odo', 'children'),
+        Output('tb_rubbers_prev_odo', 'children'),
+        Output('tb_valves_prev_odo', 'children'),
         Input('submit_odometr_btn', 'n_clicks'),
         State('curr_odometr_input', 'value')
     )
@@ -93,6 +96,15 @@ def register_callbacks(app):
             df=repair_df
         )
         last_change_cabin_filter = ld.last_change_cabin_filter(
+            df=repair_df
+        )
+        last_change_brake_fluid = ld.last_change_brake_fluid(
+            df=repair_df
+        )
+        last_change_rubbers = ld.last_change_rubbers(
+            df=repair_df
+        )
+        last_tune_valves = ld.last_tune_valves(
             df=repair_df
         )
 
@@ -126,7 +138,7 @@ def register_callbacks(app):
                 msg_engine_oil, last_change_engine_oil, current_odometer, current_odometer, current_odometer,
                 current_odometer, current_odometer, current_odometer, style_label_tbl, last_change_air_filter,
                 msg_air_filter, style_label_air_filter, last_change_cabin_filter, msg_cabin_filter,
-                style_label_cabin_filter)
+                style_label_cabin_filter, last_change_brake_fluid, last_change_rubbers, last_tune_valves)
 
         # if current_odometer < (int(last_change_engine_oil) + 7000):
         #     style_div = dict(backgroundColor='#c9e5ab')

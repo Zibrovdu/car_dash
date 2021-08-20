@@ -134,16 +134,40 @@ def last_change_engine_oil(df):
 
 
 def last_change_air_filter(df):
-    df['Замена ВФ'] = df[df['Наименование товара'].str.contains('Замена воздушного фильтра')]['Пробег'].diff()
-    mask = df[(df['Наименование товара'].str.contains('Замена воздушного фильтра')) & (df['Замена ВФ'].isna())].index
+    df['Замена ВФ'] = df[df['Наименование товара'].str.contains('амена воздушного фильтра')]['Пробег'].diff()
+    mask = df[(df['Наименование товара'].str.contains('амена воздушного фильтра')) & (df['Замена ВФ'].isna())].index
     df.loc[mask, 'Замена ВФ'] = 0
 
     return df[df['Замена ВФ'].notna()].tail(1)['Пробег'].values[0]
 
 
 def last_change_cabin_filter(df):
-    df['Замена_ФС'] = df[df['Наименование товара'].str.contains('Замена фильтра салона')]['Пробег'].diff()
-    mask = df[(df['Наименование товара'].str.contains('Замена фильтра салона')) & (df['Замена_ФС'].isna())].index
+    df['Замена_ФС'] = df[df['Наименование товара'].str.contains('амена фильтра салона')]['Пробег'].diff()
+    mask = df[(df['Наименование товара'].str.contains('амена фильтра салона')) & (df['Замена_ФС'].isna())].index
     df.loc[mask, 'Замена_ФС'] = 0
 
     return df[df['Замена_ФС'].notna()].tail(1)['Пробег'].values[0]
+
+
+def last_change_brake_fluid(df):
+    df['Замена_ТЖ'] = df[df['Наименование товара'].str.contains('амена тормозной жидкости')]['Пробег'].diff()
+    mask = df[(df['Наименование товара'].str.contains('амена тормозной жидкости')) & (df['Замена_ТЖ'].isna())].index
+    df.loc[mask, 'Замена_ТЖ'] = 0
+
+    return df[df['Замена_ТЖ'].notna()].tail(1)['Пробег'].values[0]
+
+
+def last_change_rubbers(df):
+    df['Замена_РС'] = df[df['Наименование товара'].str.contains('амена резинок стеклоочистителей')]['Пробег'].diff()
+    mask = df[
+        (df['Наименование товара'].str.contains('амена резинок стеклоочистителей')) & (df['Замена_РС'].isna())].index
+    df.loc[mask, 'Замена_РС'] = 0
+    return df[df['Замена_РС'].notna()].tail(1)['Пробег'].values[0]
+
+
+def last_tune_valves(df):
+    df['Регулировка_клапанов'] = df[df['Наименование товара'].str.contains('егулировка клапанов')]['Пробег'].diff()
+    mask = df[
+        (df['Наименование товара'].str.contains('егулировка клапанов')) & (df['Регулировка_клапанов'].isna())].index
+    df.loc[mask, 'Регулировка_клапанов'] = 0
+    return df[df['Регулировка_клапанов'].notna()].tail(1)['Пробег'].values[0]
