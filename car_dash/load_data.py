@@ -115,7 +115,7 @@ def get_param(field, table, con):
 
 
 def prepare_df_to_calc(table, con):
-    df = pd.read_sql(f"""SELECT "Наименование товара", Пробег FROM {table}""", con=con)
+    df = pd.read_sql(f"""SELECT Дата, "Наименование товара", Пробег FROM {table}""", con=con)
     df['Пробег'] = df['Пробег'].fillna(0)
     df['Пробег'] = df['Пробег'].apply(lambda x: str(x)[2:] if str(x)[0] == '~' else x)
     df['Пробег'] = df['Пробег'].apply(lambda x: str(x).replace(' ', ''))
@@ -125,36 +125,41 @@ def prepare_df_to_calc(table, con):
 
 
 def last_change_engine_oil(df):
-    df['Межсервис_ДВС'] = df[(df['Наименование товара'].str.contains('амена масла')) | (
+    df['Масло_ДВС'] = df[(df['Наименование товара'].str.contains('амена масла')) | (
         df['Наименование товара'].str.contains('ТО'))]['Пробег'].diff()
     mask = df[((df['Наименование товара'].str.contains('амена масла')) | (df['Наименование товара'].str.contains(
-        'ТО'))) & (df['Межсервис_ДВС'].isna())].index
-    df.loc[mask, 'Межсервис_ДВС'] = 0
-    return df[df['Межсервис_ДВС'].notna()].tail(1)['Пробег'].values[0]
+        'ТО'))) & (df['Масло_ДВС'].isna())].index
+    df.loc[mask, 'Масло_ДВС'] = 0
+    do_date = df[df['Масло_ДВС'].notna()].tail(1).values[0][0].strftime("%d-%m-%Y")
+    do_km = df[df['Масло_ДВС'].notna()].tail(1).values[0][2]
+    return do_date, do_km
 
 
 def last_change_air_filter(df):
-    df['Замена ВФ'] = df[df['Наименование товара'].str.contains('амена воздушного фильтра')]['Пробег'].diff()
-    mask = df[(df['Наименование товара'].str.contains('амена воздушного фильтра')) & (df['Замена ВФ'].isna())].index
-    df.loc[mask, 'Замена ВФ'] = 0
-
-    return df[df['Замена ВФ'].notna()].tail(1)['Пробег'].values[0]
+    df['Замена_ВФ'] = df[df['Наименование товара'].str.contains('амена воздушного фильтра')]['Пробег'].diff()
+    mask = df[(df['Наименование товара'].str.contains('амена воздушного фильтра')) & (df['Замена_ВФ'].isna())].index
+    df.loc[mask, 'Замена_ВФ'] = 0
+    do_date = df[df['Замена_ВФ'].notna()].tail(1).values[0][0].strftime("%d-%m-%Y")
+    do_km = df[df['Замена_ВФ'].notna()].tail(1).values[0][2]
+    return do_date, do_km
 
 
 def last_change_cabin_filter(df):
     df['Замена_ФС'] = df[df['Наименование товара'].str.contains('амена фильтра салона')]['Пробег'].diff()
     mask = df[(df['Наименование товара'].str.contains('амена фильтра салона')) & (df['Замена_ФС'].isna())].index
     df.loc[mask, 'Замена_ФС'] = 0
-
-    return df[df['Замена_ФС'].notna()].tail(1)['Пробег'].values[0]
+    do_date = df[df['Замена_ФС'].notna()].tail(1).values[0][0].strftime("%d-%m-%Y")
+    do_km = df[df['Замена_ФС'].notna()].tail(1).values[0][2]
+    return do_date, do_km
 
 
 def last_change_brake_fluid(df):
     df['Замена_ТЖ'] = df[df['Наименование товара'].str.contains('амена тормозной жидкости')]['Пробег'].diff()
     mask = df[(df['Наименование товара'].str.contains('амена тормозной жидкости')) & (df['Замена_ТЖ'].isna())].index
     df.loc[mask, 'Замена_ТЖ'] = 0
-
-    return df[df['Замена_ТЖ'].notna()].tail(1)['Пробег'].values[0]
+    do_date = df[df['Замена_ТЖ'].notna()].tail(1).values[0][0].strftime("%d-%m-%Y")
+    do_km = df[df['Замена_ТЖ'].notna()].tail(1).values[0][2]
+    return do_date, do_km
 
 
 def last_change_rubbers(df):
@@ -162,7 +167,9 @@ def last_change_rubbers(df):
     mask = df[
         (df['Наименование товара'].str.contains('амена резинок стеклоочистителей')) & (df['Замена_РС'].isna())].index
     df.loc[mask, 'Замена_РС'] = 0
-    return df[df['Замена_РС'].notna()].tail(1)['Пробег'].values[0]
+    do_date = df[df['Замена_РС'].notna()].tail(1).values[0][0].strftime("%d-%m-%Y")
+    do_km = df[df['Замена_РС'].notna()].tail(1).values[0][2]
+    return do_date, do_km
 
 
 def last_tune_valves(df):
@@ -170,4 +177,6 @@ def last_tune_valves(df):
     mask = df[
         (df['Наименование товара'].str.contains('егулировка клапанов')) & (df['Регулировка_клапанов'].isna())].index
     df.loc[mask, 'Регулировка_клапанов'] = 0
-    return df[df['Регулировка_клапанов'].notna()].tail(1)['Пробег'].values[0]
+    do_date = df[df['Регулировка_клапанов'].notna()].tail(1).values[0][0].strftime("%d-%m-%Y")
+    do_km = df[df['Регулировка_клапанов'].notna()].tail(1).values[0][2]
+    return do_date, do_km
