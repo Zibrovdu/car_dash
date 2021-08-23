@@ -165,180 +165,199 @@ def serve_layout():
                             children=[
                                 html.Div([
                                     html.Div([
-                                        html.Table([
-                                            html.Th([
-                                                html.Label('Операция')
-                                            ]),
-                                            html.Th([
-                                                html.Label('Дата последней замены')
-                                            ]),
-                                            html.Th([
-                                                html.Label('Километраж')
-                                            ]),
-                                            html.Th([
-                                                html.Label('Пробег с момента замены')
-                                            ]),
-                                            html.Th([
-                                                html.Label('Время с момента замены')
-                                            ]),
-                                            html.Th([
-                                                html.Label('Примечания')
-                                            ]),
-                                            html.Tr([
-                                                html.Td([
-                                                    html.Label('Замена масла в ДВС')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_engine_oil_date')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_engine_oil_prev_odo')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_engine_oil_km')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_engine_oil_delta')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_engine_oil_descr')
-                                                ])
-                                            ],
-                                                id='engine_oil_row'
-                                            ),
-                                            html.Tr([
-                                                html.Td([
-                                                    html.Label('Замена масла в КПП')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_transmission_oil_date')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_transmission_oil_prev_odo')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_transmission_oil_km')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_transmission_oil_delta')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_transmission_oil_descr')
-                                                ])
-                                            ],
-                                                id='transmission_oil_row'
-                                            ),
-                                            html.Tr([
-                                                html.Td([
-                                                    html.Label('Замена воздушного фильтра')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_air_filter_date')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_air_filter_prev_odo')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_air_filter_km')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_air_filter_delta')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_air_filter_descr')
-                                                ])
-                                            ],
-                                                id='air_filter_row'
-                                            ),
-                                            html.Tr([
-                                                html.Td([
-                                                    html.Label('Замена фильтра салона')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_cabin_filter_date')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_cabin_filter_prev_odo')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_cabin_filter_km')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_cabin_filter_delta')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_cabin_filter_descr')
-                                                ]),
-                                            ],
-                                                id='cabin_filter_row'
-                                            ),
-                                            html.Tr([
-                                                html.Td([
-                                                    html.Label('Замена резинок стеклоочистителей')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_change_rubbers_date')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_change_rubbers_prev_odo')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_change_rubbers_km')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_change_rubbers_delta')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_change_rubbers_descr')
-                                                ]),
-                                            ],
-                                                id='change_rubbers_row'
-                                            ),
-                                            html.Tr([
-                                                html.Td([
-                                                    html.Label('Замена тормозной жидкости')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_brake_fluid_date')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_brake_fluid_prev_odo')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_brake_fluid_km')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_brake_fluid_delta')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_brake_fluid_descr')
-                                                ]),
-                                            ],
-                                                id='brake_fluid_row'
-                                            ),
-                                            html.Tr([
-                                                html.Td([
-                                                    html.Label('Регулировка клапанов ДВС')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_tune_valves_date')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_tune_valves_prev_odo')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_tune_valves_km')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_tune_valves_delta')
-                                                ]),
-                                                html.Td([
-                                                    html.Label(id='tb_tune_valves_descr')
-                                                ]),
-                                            ],
-                                                id='tune_valves_row'
-                                            ),
-                                        ])
+                                        # html.Table([
+                                        #     html.Th([
+                                        #         html.Label('Операция')
+                                        #     ]),
+                                        #     html.Th([
+                                        #         html.Label('Дата последней замены')
+                                        #     ]),
+                                        #     html.Th([
+                                        #         html.Label('Километраж')
+                                        #     ]),
+                                        #     html.Th([
+                                        #         html.Label('Пробег с момента замены')
+                                        #     ]),
+                                        #     html.Th([
+                                        #         html.Label('Время с момента замены')
+                                        #     ]),
+                                        #     html.Th([
+                                        #         html.Label('Примечания')
+                                        #     ]),
+                                        #     html.Tr([
+                                        #         html.Td([
+                                        #             html.Label('Замена масла в ДВС')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_engine_oil_date')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_engine_oil_prev_odo')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_engine_oil_km')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_engine_oil_delta')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_engine_oil_descr')
+                                        #         ])
+                                        #     ],
+                                        #         id='engine_oil_row'
+                                        #     ),
+                                        #     html.Tr([
+                                        #         html.Td([
+                                        #             html.Label('Замена масла в КПП')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_transmission_oil_date')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_transmission_oil_prev_odo')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_transmission_oil_km')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_transmission_oil_delta')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_transmission_oil_descr')
+                                        #         ])
+                                        #     ],
+                                        #         id='transmission_oil_row'
+                                        #     ),
+                                        #     html.Tr([
+                                        #         html.Td([
+                                        #             html.Label('Замена воздушного фильтра')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_air_filter_date')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_air_filter_prev_odo')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_air_filter_km')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_air_filter_delta')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_air_filter_descr')
+                                        #         ])
+                                        #     ],
+                                        #         id='air_filter_row'
+                                        #     ),
+                                        #     html.Tr([
+                                        #         html.Td([
+                                        #             html.Label('Замена фильтра салона')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_cabin_filter_date')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_cabin_filter_prev_odo')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_cabin_filter_km')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_cabin_filter_delta')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_cabin_filter_descr')
+                                        #         ]),
+                                        #     ],
+                                        #         id='cabin_filter_row'
+                                        #     ),
+                                        #     html.Tr([
+                                        #         html.Td([
+                                        #             html.Label('Замена резинок стеклоочистителей')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_change_rubbers_date')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_change_rubbers_prev_odo')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_change_rubbers_km')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_change_rubbers_delta')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_change_rubbers_descr')
+                                        #         ]),
+                                        #     ],
+                                        #         id='change_rubbers_row'
+                                        #     ),
+                                        #     html.Tr([
+                                        #         html.Td([
+                                        #             html.Label('Замена тормозной жидкости')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_brake_fluid_date')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_brake_fluid_prev_odo')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_brake_fluid_km')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_brake_fluid_delta')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_brake_fluid_descr')
+                                        #         ]),
+                                        #     ],
+                                        #         id='brake_fluid_row'
+                                        #     ),
+                                        #     html.Tr([
+                                        #         html.Td([
+                                        #             html.Label('Регулировка клапанов ДВС')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_tune_valves_date')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_tune_valves_prev_odo')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_tune_valves_km')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_tune_valves_delta')
+                                        #         ]),
+                                        #         html.Td([
+                                        #             html.Label(id='tb_tune_valves_descr')
+                                        #         ]),
+                                        #     ],
+                                        #         id='tune_valves_row'
+                                        #     ),
+                                        # ]),
+                                        html.Div([
+                                            dt.DataTable(
+                                                id='repair_table',
+                                                style_data_conditional=[
+                                                    {'if': {'filter_query': f'{{Состояние}} = ok', },
+                                                     'backgroundColor': 'lightgreen'
+                                                     },
+                                                    {'if': {'filter_query': f'{{Состояние}} = warning', },
+                                                     'backgroundColor': '#efca66'
+                                                     },
+                                                    {'if': {'filter_query': f'{{Состояние}} = stop', },
+                                                     'backgroundColor': 'rgb(223, 3, 38)', 'color': 'white'
+                                                     },
+                                                ]
+                                            )
+                                        ],
+                                            style=dict(fontSize='16px')
+                                        ),
+
                                     ], style=dict(padding='40px'))
                                 ])
 
